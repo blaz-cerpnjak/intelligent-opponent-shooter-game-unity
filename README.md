@@ -42,6 +42,8 @@ The core AI behavior is implemented using a Finite State Machine approach. The a
 
 The State class is the base class for representing states. Each state inherits from this class and receives a reference to an AgentController script.
 
+#### Base State
+
 ```csharp
 public class State
 {
@@ -59,26 +61,70 @@ public class State
 }
 ```
 
-Example for PatrolState:
+#### Patrol State:
 
 ```csharp
 public class PatrolState : State
 {
+    private int currentWaypointIndex;
+    private float timer;
+    private bool isReversedPatrol;
+
     public PatrolState(AgentController agent) : base(agent) {}
 
     public override void Enter() {
-        // Initialize variables
+        agent.navMeshAgent.enabled = true;
+        agent.navMeshAgent.speed = 3f;
+        currentWaypointIndex = 0;
+        timer = 0f;
     }
 
     // Logic
     public override Tick() {
-        if (agent.currentTarget != null) {
-            agent.ChangeState(agent.ChaseTargetState);
+        if (agent.currentTarget != null)
+        {
+            agent.ChangeState(agent.chaseTargetState);
+            return;
+        }
+
+        if (!agent.navMeshAgent.pathPending && agent.navMeshAgent.remainingDistance < agent.navMeshAgent.stoppingDistance && !agent.navMeshAgent.hasPath)
+        {
+            timer += Time.deltaTime;
+
+            // We want agent to wait, before going to the next waypoint
+            if (timer >= 2f)
+            {
+                GoToNextWaypoint();
+                timer = 0f;
+            }
         }
     }
 
-    public override Exit() {
-        // Reset variables
+    public override Exit() {} // Not needed in this state
+
+    private void GoToNextWaypoint()
+    {
+        // Assign Transform[] patrolWaypoints from scene
+        if (agent.patrolWaypoints.Length == 0) {
+            return;
+        }
+
+        agent.navMeshAgent.destination = agent.patrolWaypoints[currentWaypointIndex].position;
+
+        // We save position, if the agent will need to return back (e.g. he leaves position, to pursue the target)
+        agent.initialPosition = agent.patrolWaypoints[currentWaypointIndex].position;
+
+        if (currentWaypointIndex >= agent.patrolWaypoints.Length - 1) {
+            isReversedPatrol = true;
+        } else if (currentWaypointIndex == 0) {
+            isReversedPatrol = false;
+        }
+
+        if (isReversedPatrol) {
+            currentWaypointIndex--;
+        } else {
+            currentWaypointIndex++;
+        }
     }
 }
 ```
@@ -108,9 +154,15 @@ public class AgentController : MonoBehaviour
     private NavMeshAgent navMeshAgent;
     private State currentState;
 
-    public State idleState;
+    [Header("Agent")]
+    public Transform[] patrolWaypoints;
+    public Vector3 initialPosition;
+    public Quaternion initialRotation;
+
+    [Header("Agent States")]
     public State patrolState;
-    ...
+    public State chaseTargetState;
+    public State attackState;
 
     public void Awake() {
         animator = GetComponent<Animator>();
@@ -132,9 +184,9 @@ public class AgentController : MonoBehaviour
 
     private void InitializeStates()
     {
-        idleState = new IdleState(this);
         patrolState = new PatrolState(this);
-        ...
+        chaseTargetState = new ChaseTargetState(this);
+        attackState = new AttackState(this);
     }
 
     public void ChangeState(State nextState)
