@@ -1,5 +1,7 @@
 # Intelligent Opponents in Unity using Finit State Machine
 
+[Gameplay Video]([https://www.google.com](https://www.youtube.com/watch?v=eTh8MVgpejQ))
+
 ## Table of Contents
 
 - [About](#about)
