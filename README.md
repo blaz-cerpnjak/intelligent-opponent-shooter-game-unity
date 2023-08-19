@@ -12,7 +12,7 @@ Third-person shooter game with intelligent soldiers
 ## Finite State Machine
 The core AI behavior is implemented using a Finite State Machine approach. The approach is to divide the behaviour of an agent into several different states. For example: patrolling state, chasing target state and attacking state. Between these states we define transitions or conditions and actions that the agent will perform in a given state.
 
-![FSM Example](screenshots/fsm_example.png?raw=true)
+ <img src="screenshots/fsm_example.png?raw=true" alt="FSM Example" height="350">
 
 <a name="finite-state-machine-implementation"></a>
 ### Implementation 
@@ -135,7 +135,7 @@ The Navigation Mesh, or NavMesh, is a data structure that represents walkable su
 
 Generated NavMesh should look something like this. Blue color represents walkable areas for agents.
 
-![Generated NavMesh](screenshots/generated_nav_mesh.png?raw=true)
+<img src="screenshots/generated_nav_mesh.png?raw=true" alt="Generated NavMesh" height="400">
 
 <a name="generating-nav-mesh"></a>
 ### Adding a NavMeshAgent
