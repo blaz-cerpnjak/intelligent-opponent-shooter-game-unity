@@ -63,9 +63,9 @@ public class PatrolState : State
         // Initialize variables
     }
 
+    // Logic
     public override Tick() {
-        // Logic
-        if (targetVisible) {
+        if (agent.currentTarget != null) {
             agent.ChangeState(agent.ChaseTargetState);
         }
     }
