@@ -4,7 +4,6 @@ Third-person shooter game with intelligent soldiers
 ## Table of Contents
 
 - [Finite State Machine](#finite-state-machine)
-    - [Defining States](#defining-states)
     - [Implementation](#finite-state-machine-implementation)
 - [Agent Controller](#agent-controller)
 - [Navigation and Movement](#navigation-and-movement)
@@ -13,11 +12,7 @@ Third-person shooter game with intelligent soldiers
 ## Finite State Machine
 The core AI behavior is implemented using a Finite State Machine approach. The approach is to divide the behaviour of an agent into several different states. For example: patrolling state, chasing target state and attacking state. Between these states we define transitions or conditions and actions that the agent will perform in a given state.
 
-
-
-<a name="defining-states"></a>
-### Defining States 
-The opponent's behavior is divided into various states, each representing a different gameplay scenario such as "Idle", "Chase", "Attack" and more.
+![FSM Example](screenshots/fsm_example.png?raw=true)
 
 <a name="finite-state-machine-implementation"></a>
 ### Implementation 
