@@ -6,6 +6,9 @@
     - [Implementation](#finite-state-machine-implementation)
 - [Agent Controller](#agent-controller)
 - [Navigation and Movement](#navigation-and-movement)
+    - [Generating NavMesh](#nav-mesh)
+    - [NavMeshAgent](#nav-mesh-agent)
+    - [Movement](#movement)
 
 <a name="finite-state-machine"></a>
 ## Finite State Machine
@@ -125,7 +128,7 @@ public class AgentController : MonoBehaviour
 
 The Navigation Mesh, or NavMesh, is a data structure that represents walkable surfaces within the game world. It acts as a blueprint for the AI characters to navigate the environment seamlessly. With NavMesh, the opponents can find optimal paths to reach their destinations, whether it's chasing the player, taking cover, or maneuvering around obstacles.
 
-<a name="generating-nav-mesh"></a>
+<a name="nav-mesh"></a>
 ### Generating a NavMesh
 
 1. Mark all static objects in scene as _Static_.
@@ -136,7 +139,7 @@ Generated NavMesh should look something like this. Blue color represents walkabl
 
 <img src="screenshots/generated_nav_mesh.png?raw=true" alt="Generated NavMesh" height="400">
 
-<a name="generating-nav-mesh"></a>
+<a name="nav-mesh-agent"></a>
 ### Adding a NavMeshAgent
 
 NavMeshAgent is used for moving your object and navigating it on the NavMesh.
@@ -150,5 +153,15 @@ Here's how you can add and configure a NavMeshAgent for it:
     - _Stopping_ Distance: Set the "Stopping Distance" parameter to determine how close the AI opponent gets to its destination before stopping. This prevents the agent from overshooting the target.
     - _Acceleration_: You can adjust the "Acceleration" parameter to control how quickly the AI opponent accelerates and decelerates while moving.
 
-![NavMeshAgent](screenshots/nav_mesh_agent.png?raw=true)
+<p align="center">
+    <img src="screenshots/nav_mesh_agent.png?raw=true" alt="NavMeshAgent Component" height="700">
+</p>
 
+<a name="movement"></a>
+### Movement
+
+NavMeshAgent is responsible for moving the GameObject. You just have to set the destintation.
+
+```csharp
+navMeshAgent.destination = currentTarget.transform;
+```
