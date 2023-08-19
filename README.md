@@ -69,6 +69,7 @@ public class AgentController : MonoBehaviour
 {
     private Animator animator;
     private NavMeshAgent navMeshAgent;
+    private State currentState;
 
     public State idleState;
     public State patrolState;
@@ -83,12 +84,13 @@ public class AgentController : MonoBehaviour
     public void Start()
     {
         InitializeStates();
+        currentState = idleState;
     }
 
     // Run every frame
     public void Update()
     {
-
+        currentState.Tick();
     }
 
     private void InitializeStates()
@@ -97,5 +99,14 @@ public class AgentController : MonoBehaviour
         patrolState = new PatrolState(this);
         ...
     }
+
+    public void ChangeState(State nextState)
+    {
+        currentState.Exit();
+        currentState = newState;
+        currentState.Enter();
+    }
 }
 ```
+
+## Path finding and movement (NavMesh & NavMeshAgent)
