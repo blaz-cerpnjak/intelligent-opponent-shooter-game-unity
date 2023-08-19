@@ -1,5 +1,4 @@
-# Third-Person Shooter Game with Intelligent Opponents
-Third-person shooter game with intelligent soldiers
+# Intelligent Opponents in Unity using Finit State Machine
 
 ## Table of Contents
 
