@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [About](#about)
 - [Finite State Machine](#finite-state-machine)
     - [Implementation](#finite-state-machine-implementation)
 - [Agent Controller](#agent-controller)
@@ -9,6 +10,12 @@
     - [Generating NavMesh](#nav-mesh)
     - [NavMeshAgent](#nav-mesh-agent)
     - [Movement](#movement)
+- [Player Detection](#player-detection)
+    - [Implementation](#player-detection-implementation)
+
+<a name="about"></a>
+## About
+For my bachelor's thesis, I developed intelligent opponents within a third-person shooter game. This was achieved by utilizing Finite State Machine (FSM) approach. The FSM approach allowed for the dynamic control of the opponents' behaviors, enabling them to adapt and respond intelligently to different in-game situations. In this document I will explain how to achieve intelligent behaviour with the help of FSM and Unity engine.
 
 <a name="finite-state-machine"></a>
 ## Finite State Machine
@@ -123,6 +130,8 @@ public class AgentController : MonoBehaviour
 }
 ```
 
+<hr>
+
 <a name="navigation-and-movement"></a>
 ## Navigation and Movement (NavMesh & NavMeshAgent)
 
@@ -137,7 +146,9 @@ The Navigation Mesh, or NavMesh, is a data structure that represents walkable su
 
 Generated NavMesh should look something like this. Blue color represents walkable areas for agents.
 
-<img src="screenshots/generated_nav_mesh.png?raw=true" alt="Generated NavMesh" height="400">
+<p align="center">
+    <img src="screenshots/generated_nav_mesh.png?raw=true" alt="Generated NavMesh" height="400">
+</p>
 
 <a name="nav-mesh-agent"></a>
 ### Adding a NavMeshAgent
@@ -164,4 +175,85 @@ NavMeshAgent is responsible for moving the GameObject. You just have to set the 
 
 ```csharp
 navMeshAgent.destination = currentTarget.transform.position; // Agent will start moving towards the destination
+```
+
+<hr>
+
+<a name="player-detection"></a>
+## Player Detection
+In order for the agent to detect the player, it must initially verify whether the player is within its field of vision (FOV) and ensure that no obstacles obstruct the line of sight between them.
+
+<br>
+<p align="center">
+    <img src="screenshots/player_detection_example.png?raw=true" alt="NavMeshAgent Component" height="300">
+</p>
+
+<a name="player-detection-implementation"></a>
+### Implementation
+We have implemented a function called _SearchForTarget_, tasked with determining whether a target is present and setting the _currentTarget_ variable accordingly. This function is executed at intervals of 1 second using Coroutines.
+
+<br>
+
+We start this Coroutine inside the Start method of AgentController.
+
+```csharp
+public void Start()
+{
+    StartCoroutine(SearchForTarget());
+}
+```
+
+```csharp
+private IEnumerator SearchForTarget()
+{
+    WaitForSeconds waitTime = new WaitForSeconds(1f);
+    
+    while (!isDead)
+    {
+        yield return waitTime;
+
+        // Find all objects around agent's position
+        // Detection layer is a Layer Mash set to "Player", because we only want to detect the player (ignore other layers)
+        Collider[] colliders = Physics.OverlapSphere(transform.position, config.detectionRadius, config.detectionLayer);
+
+        if (colliders.Length <= 0)
+        {
+            currentTarget = null;
+            yield return waitTime;
+        }
+
+        foreach (Collider collider in colliders)
+        {
+            // If object has component PlayerController (script on player's game object), we detected the player
+            if (collider.TryGetComponent(out PlayerController player))
+            {
+                Vector3 directionToTarget = (player.transform.position - transform.position).normalized;
+
+                // Check FOV
+                if (Vector3.Angle(transform.forward, directionToTarget) < 100)
+                {
+                    float distanceToTarget = Vector3.Distance(transform.position, player.transform.position);
+                    Vector3 startPoint = new Vector3(transform.position.x, config.characterEyeLevel, transform.position.z);
+
+                    // Check if there is a obstacle between agent and player
+                    // Obstacle layer is layer with everything instead of Player
+                    if (Physics.Raycast(startPoint, directionToTarget, distanceToTarget, config.obstacleLayer))
+                    {
+                        currentTarget = null;
+                        break;
+                    } 
+
+                    currentTarget = player.transform;
+                    lastKnownTargetPosition = currentTarget.position;
+                    break;
+                } else {
+                     currentTarget = null;
+                     break;
+                }
+            } else {
+                currentTarget = null;
+            }
+        }
+    }
+}
 ```
