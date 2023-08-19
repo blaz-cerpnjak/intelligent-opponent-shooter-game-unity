@@ -6,6 +6,7 @@ Third-person shooter game with intelligent soldiers
 - [Finite State Machine](#finite-state-machine)
     - [Implementation](#finite-state-machine-implementation)
 - [Agent Controller](#agent-controller)
+- [Navigation and Movement](#navigation-and-movement)
 
 <a name="finite-state-machine"></a>
 ## Finite State Machine
@@ -118,19 +119,35 @@ public class AgentController : MonoBehaviour
 }
 ```
 
-## Path finding and movement (NavMesh & NavMeshAgent)
+<a name="navigation-and-movement"></a>
+## Navigation and Movement (NavMesh & NavMeshAgent)
 
 The Navigation Mesh, or NavMesh, is a data structure that represents walkable surfaces within the game world. It acts as a blueprint for the AI characters to navigate the environment seamlessly. With NavMesh, the opponents can find optimal paths to reach their destinations, whether it's chasing the player, taking cover, or maneuvering around obstacles.
 
+<a name="generating-nav-mesh"></a>
 ### Generating a NavMesh
 
 1. Mark all static objects in scene as _Static_.
 2. Select all objects that should affect the navigation - walkable surfaces and obstacles.
 3. Generate a NavMesh clicking _Bake_ button (open _Window > AI > Navigation_)
 
-## Section 2
-Content for Section 2.
 Generated NavMesh should look something like this. Blue color represents walkable areas for agents.
 
 ![Generated NavMesh](screenshots/generated_nav_mesh.png?raw=true)
+
+<a name="generating-nav-mesh"></a>
+### Adding a NavMeshAgent
+
+NavMeshAgent is used for moving your object and navigating it on the NavMesh.
+
+Here's how you can add and configure a NavMeshAgent for it:
+
+1. **Select the GameObject**: Click on the AI opponent GameObject in the Unity Scene Hierarchy that you want to enable navigation for.
+2. **Add NavMeshAgent Component**: In the Inspector window, click on the "Add Component" button. Search for "NavMeshAgent" and select it from the list to add the NavMeshAgent component to the GameObject.
+3. **Configuring NavMeshAgent**:
+    - _Speed_: Adjust the "Speed" parameter to set the movement speed of the AI opponent. This determines how fast the agent moves along the NavMesh.
+    - _Stopping_ Distance: Set the "Stopping Distance" parameter to determine how close the AI opponent gets to its destination before stopping. This prevents the agent from overshooting the target.
+    - _Acceleration_: You can adjust the "Acceleration" parameter to control how quickly the AI opponent accelerates and decelerates while moving.
+
+
 
