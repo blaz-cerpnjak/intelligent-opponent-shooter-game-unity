@@ -230,7 +230,7 @@ private IEnumerator SearchForTarget()
 
         // Find all objects around agent's position
         // Detection layer is a Layer Mash set to "Player", because we only want to detect the player (ignore other layers)
-        Collider[] colliders = Physics.OverlapSphere(transform.position, config.detectionRadius, config.detectionLayer);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 40f, config.detectionLayer);
 
         if (colliders.Length <= 0)
         {
