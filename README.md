@@ -1,4 +1,4 @@
-# Third-person shooter game with intelligent opponents
+# Third-Person Shooter Game with Intelligent Opponents
 Third-person shooter game with intelligent soldiers
 
 ## Finite State Machine
@@ -110,3 +110,12 @@ public class AgentController : MonoBehaviour
 ```
 
 ## Path finding and movement (NavMesh & NavMeshAgent)
+
+The Navigation Mesh, or NavMesh, is a data structure that represents walkable surfaces within the game world. It acts as a blueprint for the AI characters to navigate the environment seamlessly. With NavMesh, the opponents can find optimal paths to reach their destinations, whether it's chasing the player, taking cover, or maneuvering around obstacles.
+
+### Generating a NavMesh
+
+1. Mark all static objects in scene as "Static".
+2. Select all objects that should affect the navigation - walkable surfaces and obstacles.
+3. Generate a NavMesh clicking "Bake" button (open Window > AI > Navigation)
+
