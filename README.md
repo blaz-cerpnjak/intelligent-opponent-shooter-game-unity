@@ -1,9 +1,17 @@
 # Third-Person Shooter Game with Intelligent Opponents
 Third-person shooter game with intelligent soldiers
 
+## Table of Contents
+
+- [Finite State Machine](#finite-state-machine)
+    - [Implementation](#finite-state-machine-implementation)
+- [Agent Controller](#agent-controller)
+
+<a name="finite-state-machine"></a>
 ## Finite State Machine
 The core AI behavior is implemented using a Finite State Machine approach. The opponent's behavior is divided into various states, each representing a different gameplay scenario such as "Idle", "Chase", "Attack" and more.
 
+<a name="finite-state-machine-implementation"></a>
 ### Implementation 
 
 The State class is the base class for representing states. Each state inherits from this class and receives a reference to an AgentController script.
@@ -60,6 +68,7 @@ public void ChangeState(State nextState)
 }
 ```
 
+<a name="agent-controller"></a>
 ## Agent Controller
 
 AgentController is a script on agent's GameObject, which is used for handling agent's states and animations.
@@ -115,7 +124,13 @@ The Navigation Mesh, or NavMesh, is a data structure that represents walkable su
 
 ### Generating a NavMesh
 
-1. Mark all static objects in scene as "Static".
+1. Mark all static objects in scene as _Static_.
 2. Select all objects that should affect the navigation - walkable surfaces and obstacles.
-3. Generate a NavMesh clicking "Bake" button (open Window > AI > Navigation)
+3. Generate a NavMesh clicking _Bake_ button (open _Window > AI > Navigation_)
+
+## Section 2
+Content for Section 2.
+Generated NavMesh should look something like this. Blue color represents walkable areas for agents.
+
+![Generated NavMesh](screenshots/generated_nav_mesh.png?raw=true)
 
