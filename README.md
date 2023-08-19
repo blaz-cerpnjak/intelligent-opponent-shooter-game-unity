@@ -4,13 +4,20 @@ Third-person shooter game with intelligent soldiers
 ## Table of Contents
 
 - [Finite State Machine](#finite-state-machine)
+    - [Defining States](#defining-states)
     - [Implementation](#finite-state-machine-implementation)
 - [Agent Controller](#agent-controller)
 - [Navigation and Movement](#navigation-and-movement)
 
 <a name="finite-state-machine"></a>
 ## Finite State Machine
-The core AI behavior is implemented using a Finite State Machine approach. The opponent's behavior is divided into various states, each representing a different gameplay scenario such as "Idle", "Chase", "Attack" and more.
+The core AI behavior is implemented using a Finite State Machine approach. The approach is to divide the behaviour of an agent into several different states. For example: patrolling state, chasing target state and attacking state. Between these states we define transitions or conditions and actions that the agent will perform in a given state.
+
+
+
+<a name="defining-states"></a>
+### Defining States 
+The opponent's behavior is divided into various states, each representing a different gameplay scenario such as "Idle", "Chase", "Attack" and more.
 
 <a name="finite-state-machine-implementation"></a>
 ### Implementation 
@@ -149,5 +156,5 @@ Here's how you can add and configure a NavMeshAgent for it:
     - _Stopping_ Distance: Set the "Stopping Distance" parameter to determine how close the AI opponent gets to its destination before stopping. This prevents the agent from overshooting the target.
     - _Acceleration_: You can adjust the "Acceleration" parameter to control how quickly the AI opponent accelerates and decelerates while moving.
 
-
+![NavMeshAgent](screenshots/nav_mesh_agent.png?raw=true)
 
