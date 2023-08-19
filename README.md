@@ -12,16 +12,23 @@
     - [Movement](#movement)
 - [Player Detection](#player-detection)
     - [Implementation](#player-detection-implementation)
+- [Sound Detection](#sound-detection)
+    - [Implementation](#sound-detection-implementation)
 
 <a name="about"></a>
 ## About
 For my bachelor's thesis, I developed intelligent opponents within a third-person shooter game. This was achieved by utilizing Finite State Machine (FSM) approach. The FSM approach allowed for the dynamic control of the opponents' behaviors, enabling them to adapt and respond intelligently to different in-game situations. In this document I will explain how to achieve intelligent behaviour with the help of FSM and Unity engine.
 
+<hr>
+
 <a name="finite-state-machine"></a>
 ## Finite State Machine
 The core AI behavior is implemented using a Finite State Machine approach. The approach is to divide the behaviour of an agent into several different states. For example: patrolling state, chasing target state and attacking state. Between these states we define transitions or conditions and actions that the agent will perform in a given state.
 
- <img src="screenshots/fsm_example.png?raw=true" alt="FSM Example" height="350">
+<br>
+<p align="center">
+    <img src="screenshots/fsm_example.png?raw=true" alt="FSM Example" height="350">
+</p>
 
 <a name="finite-state-machine-implementation"></a>
 ### Implementation 
@@ -79,6 +86,8 @@ public void ChangeState(State nextState)
     currentState.Enter();
 }
 ```
+
+<hr>
 
 <a name="agent-controller"></a>
 ## Agent Controller
@@ -252,6 +261,63 @@ private IEnumerator SearchForTarget()
                 }
             } else {
                 currentTarget = null;
+            }
+        }
+    }
+}
+```
+
+<hr>
+
+<a name="sound-detection"></a>
+## Sound Detection
+Sound detection works similar as player detection. When we play a certain sound effect on a game object, for example explosion, we must notify all agents in certain radius around that object. Each agent than responds to that sound.
+
+<a name="sound-detection-implementation"></a>
+### Implementation
+
+```csharp
+// Class for representing information about sound
+public class MySound
+{
+    public readonly Vector3 position;
+    public readonly float range;
+
+    public MySound(Vector3 position, float range)
+    {
+        this.position = position;
+        this.range = range;
+    }
+}
+```
+
+<br>
+
+```csharp
+// Every object, that can response to sound, must implement this interface
+public interface IHear
+{
+    void RespondToSound(MySound sound);
+}
+```
+
+<br>
+
+```csharp
+// Function for notifying agents nearby
+// We call this function, when we play some sound effect in scene
+public static class MySounds
+{
+    public static void MakeSound(MySound sound) 
+    {
+        int layerMask = 1 << 15; // 15 = Agent's Layer Mask (filter, for faster and more optimal search)
+        Collider[] colliders = Physics.OverlapSphere(sound.position, sound.range, layerMask);
+
+        foreach (Collider collider in colliders) 
+        {
+            if (collider.TryGetComponent(out IHear hearer))
+            {
+                hearer.RespondToSound(sound);
             }
         }
     }
