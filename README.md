@@ -163,5 +163,5 @@ Here's how you can add and configure a NavMeshAgent for it:
 NavMeshAgent is responsible for moving the GameObject. You just have to set the destintation.
 
 ```csharp
-navMeshAgent.destination = currentTarget.transform;
+navMeshAgent.destination = currentTarget.transform.position; // Agent will start moving towards the destination
 ```
