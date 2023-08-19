@@ -1,4 +1,4 @@
-# Intelligent Opponents in Unity using Finit State Machine
+# Intelligent Opponents in Unity using Finite State Machine
 
 [Gameplay Video](https://www.youtube.com/watch?v=eTh8MVgpejQ)
 
@@ -177,7 +177,7 @@ Here's how you can add and configure a NavMeshAgent for it:
 2. **Add NavMeshAgent Component**: In the Inspector window, click on the "Add Component" button. Search for "NavMeshAgent" and select it from the list to add the NavMeshAgent component to the GameObject.
 3. **Configuring NavMeshAgent**:
     - _Speed_: Adjust the "Speed" parameter to set the movement speed of the AI opponent. This determines how fast the agent moves along the NavMesh.
-    - _Stopping_ Distance: Set the "Stopping Distance" parameter to determine how close the AI opponent gets to its destination before stopping. This prevents the agent from overshooting the target.
+    - _Stopping_ Distance: Set the "Stopping Distance" parameter to determine how close the AI opponent gets to its destination before stopping.
     - _Acceleration_: You can adjust the "Acceleration" parameter to control how quickly the AI opponent accelerates and decelerates while moving.
 
 <p align="center">
