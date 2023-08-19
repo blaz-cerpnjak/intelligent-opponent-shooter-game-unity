@@ -59,3 +59,43 @@ public void ChangeState(State nextState)
     currentState.Enter();
 }
 ```
+
+## Agent Controller
+
+AgentController is a script on agent's GameObject, which is used for handling agent's states and animations.
+
+```csharp
+public class AgentController : MonoBehaviour
+{
+    private Animator animator;
+    private NavMeshAgent navMeshAgent;
+
+    public State idleState;
+    public State patrolState;
+    ...
+
+    public void Awake() {
+        animator = GetComponent<Animator>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
+
+    // Run before first frame
+    public void Start()
+    {
+        InitializeStates();
+    }
+
+    // Run every frame
+    public void Update()
+    {
+
+    }
+
+    private void InitializeStates()
+    {
+        idleState = new IdleState(this);
+        patrolState = new PatrolState(this);
+        ...
+    }
+}
+```
