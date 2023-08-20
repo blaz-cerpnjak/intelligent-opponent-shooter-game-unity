@@ -1,6 +1,14 @@
 # Intelligent Opponents in Unity using Finite State Machine
 
-[Gameplay Video](https://www.youtube.com/watch?v=eTh8MVgpejQ)
+<br />
+<p align="center">
+    Third-Person Shooter Game With Intelligent Opponents
+    <br />
+    <br />
+    <a href="https://www.youtube.com/watch?v=eTh8MVgpejQ">Gameplay Video</a>
+    ·
+    <a href="https://dk.um.si/IzpisGradiva.php?id=84780&lang=slv">Bachelor's Thesis</a>
+</p>
 
 ## Table of Contents
 
