@@ -6,7 +6,9 @@
 
 - [About](#about)
 - [Finite State Machine](#finite-state-machine)
-    - [Implementation](#finite-state-machine-implementation)
+    - [Base State](#fsm-base-state)
+    - [Patrol State](#fsm-patrol-state)
+    - [Chase Target State](#fsm-chase-state)
 - [Agent Controller](#agent-controller)
 - [Navigation and Movement](#navigation-and-movement)
     - [Generating NavMesh](#nav-mesh)
@@ -37,12 +39,9 @@ The core AI behavior is implemented using a Finite State Machine approach. The a
     <img src="screenshots/fsm_example.png?raw=true" alt="FSM Example" height="350">
 </p>
 
-<a name="finite-state-machine-implementation"></a>
-### Implementation 
-
+<a name="fsm-base-state"></a>
+### Base State 
 The State class is the base class for representing states. Each state inherits from this class and receives a reference to an AgentController script.
-
-#### Base State
 
 ```csharp
 public class State
@@ -61,7 +60,21 @@ public class State
 }
 ```
 
-#### Patrol State:
+### Changing Current State
+In AgentController script we store _currentState_. We developed a method _ChangeState_, which updates current state. First it executes _Exit()_ method from current State, than it changes the old state with new one and finally it executes _Enter()_ method from new state.
+
+```csharp
+public void ChangeState(State nextState)
+{
+    currentState.Exit();
+    currentState = newState;
+    currentState.Enter();
+}
+```
+
+<a name="fsm-patrol-state"></a>
+### Patrol State:
+In the patrol state, the agent walks between the points that we predefine. At each point, the agent jumps for 2 seconds.
 
 ```csharp
 public class PatrolState : State
@@ -129,14 +142,53 @@ public class PatrolState : State
 }
 ```
 
-Changing states:
+<hr>
+
+<a name="fsm-chase-state"></a>
+### Chase Target State:
+In a target chase state, the agent follows the player and tries to reach the minimum attacking distance.
 
 ```csharp
-public void ChangeState(State nextState)
+public class ChaseTargetState : SoldierState
 {
-    currentState.Exit();
-    currentState = newState;
-    currentState.Enter();
+    public ChaseTargetState(AgentController agent) : base(agent) {}
+
+    public override void Enter()
+    {
+        agent.navMeshAgent.enabled = true;
+        agent.navMeshAgent.speed = 5f;
+        agent.navMeshAgent.destination = agent.currentTarget.transform.position;
+    }
+
+    public override void Tick()
+    {
+        if (agent.currentTarget == null)
+        {
+            agent.investigationState.investigationPosition = soldier.lastKnownTargetPosition;
+            agent.ChangeState(soldier.investigationState);
+            return;
+        }
+
+        if (IsTargetInAttackRange())
+        {
+            agent.ChangeState(soldier.attackState);
+            return;
+        }
+
+        MoveTowardsCurrentTarget();
+    }
+
+    private void MoveTowardsCurrentTarget()
+    {
+        agent.navMeshAgent.enabled = true;
+        agent.navMeshAgent.destination = agent.currentTarget.transform.position;
+    }
+
+    private bool IsTargetInAttackRange()
+    {
+        return agent.distanceFromCurrentTarget <= 50f;
+    }
+
 }
 ```
 
@@ -144,7 +196,6 @@ public void ChangeState(State nextState)
 
 <a name="agent-controller"></a>
 ## Agent Controller
-
 AgentController is a script on agent's GameObject, which is used for handling agent's states and animations.
 
 ```csharp
@@ -160,9 +211,9 @@ public class AgentController : MonoBehaviour
     public Quaternion initialRotation;
 
     [Header("Agent States")]
-    public State patrolState;
-    public State chaseTargetState;
-    public State attackState;
+    public PatrolState patrolState;
+    public ChaseTargetState chaseTargetState;
+    public AttackState attackState;
 
     public void Awake() {
         animator = GetComponent<Animator>();
