@@ -9,6 +9,7 @@
     - [Base State](#fsm-base-state)
     - [Patrol State](#fsm-patrol-state)
     - [Chase Target State](#fsm-chase-state)
+    - [Attack State](#fsm-attack-state)
 - [Agent Controller](#agent-controller)
 - [Navigation and Movement](#navigation-and-movement)
     - [Generating NavMesh](#nav-mesh)
@@ -149,7 +150,7 @@ public class PatrolState : State
 In a target chase state, the agent follows the player and tries to reach the minimum attacking distance.
 
 ```csharp
-public class ChaseTargetState : SoldierState
+public class ChaseTargetState : State
 {
     public ChaseTargetState(AgentController agent) : base(agent) {}
 
@@ -189,6 +190,53 @@ public class ChaseTargetState : SoldierState
         return agent.distanceFromCurrentTarget <= 50f;
     }
 
+}
+```
+
+<hr>
+
+<a name="fsm-attack-state"></a>
+### Attack State:
+In a attack state agents shoots at target.
+
+```csharp
+public class AttackState : State
+{
+    public AttackState(AgentController agent) : base(agent) {}
+
+    override public void Enter()
+    {
+        soldier.aimRig.weight = 1f;
+        soldier.weaponIK.isAiming = true;
+        soldier.navMeshAgent.enabled = false;
+        soldier.weaponIK.SetFiring(true);
+    }
+
+    override public void Tick()
+    {
+        agent.RotateTowardsTarget();
+
+        if (agent.currentTarget == null)
+        {
+            soldier.investigationState.investigationPosition = soldier.lastKnownTargetPosition;
+            soldier.ChangeState(soldier.investigationState);
+            return;
+        }
+
+        if (agent.distanceFromCurrentTarget > 50f)
+        {
+            agent.ChangeState(agent.chaseTargetState);
+            return;
+        }
+    }
+
+    override public void Exit()
+    {
+        soldier.weaponIK.SetFiring(false);
+        soldier.aimRig.weight = 0f;
+        soldier.weaponIK.isAiming = false;
+        soldier.navMeshAgent.enabled = true;
+    }
 }
 ```
 
