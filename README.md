@@ -1,4 +1,4 @@
-# Intelligent Opponents in Unity using Finite State Machine
+<h1 align="center">Intelligent Opponents in Unity using Finite State Machine</h1>
 
 <br />
 <p align="center">
