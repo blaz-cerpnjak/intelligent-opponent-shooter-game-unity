@@ -294,6 +294,14 @@ public class AgentController : MonoBehaviour
         currentState = newState;
         currentState.Enter();
     }
+
+    public void RotateTowardsTarget()
+    {
+        if (currentTarget == null) return;
+        Vector3 direction = currentTarget.position - transform.position; // Calculate the direction from the agent's position to the target's position
+        direction.y = 0; // Ignore the vertical component of the direction
+        transform.LookAt(transform.position + direction); // Rotate the agent towards the target
+    }
 }
 ```
 
