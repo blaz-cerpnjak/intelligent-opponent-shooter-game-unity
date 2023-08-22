@@ -15,6 +15,7 @@
 - [About](#about)
 - [Finite State Machine](#finite-state-machine)
     - [Base State](#fsm-base-state)
+    - [Alert State](#fsm-alert-state)
     - [Patrol State](#fsm-patrol-state)
     - [Chase Target State](#fsm-chase-state)
     - [Investigation State](#fsm-investigation-state)
@@ -149,6 +150,56 @@ public class PatrolState : State
             currentWaypointIndex++;
         }
     }
+}
+```
+
+<hr>
+
+<a name="fsm-alert-state"></a>
+### Alert State:
+The alert state is like some kind of intermediate state before the agent goes into the attack state. This is so that the agent doesn't immediately start attacking the player, as this could frustrate him.
+
+```csharp
+public class AlertState : State
+{
+    public float alertTime = 2f;
+    float timer;
+
+    public AlertState(AgentController agent) : base(agent) {}
+
+    public override void Enter()
+    {
+        agent.aimRig.weight = 1f;
+        timer = 0f;
+    }
+
+    public override void Tick()
+    {
+        agent.RotateTowardsTarget();
+
+        if (agent.currentTarget == null)
+        {
+            if (agent.lastKnownTargetPosition == null)
+            {
+                agent.returnToPostState.position = agent.initialPosition;
+                agent.ChangeState(agent.returnToPostState);
+                return;
+            }
+
+            agent.investigationState.investigationPosition = agent.lastKnownTargetPosition;
+            agent.ChangeState(agent.investigationState);
+            return;
+        }
+       
+        timer += Time.deltaTime;
+
+        if (timer >= alertTime && soldier.currentTarget != null)
+        {
+            agent.ChangeState(agent.chaseTargetState);
+        }
+    }
+
+    override public void Exit() {}
 }
 ```
 
