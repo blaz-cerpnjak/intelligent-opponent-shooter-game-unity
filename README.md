@@ -401,12 +401,22 @@ public class AgentController : MonoBehaviour
 
     [Header("Agent States")]
     public PatrolState patrolState;
+    public AlertState alertState;
     public ChaseTargetState chaseTargetState;
+    public InvestigationState investigationState;
     public AttackState attackState;
+
+    [Header("Target")]
+    public Transform currentTarget;
+    public float distanceFromCurrentTarget; // distance from current target to agent
+    public Vector3 lastKnownTargetPosition;
 
     public void Awake() {
         animator = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
     }
 
     // Run before first frame
@@ -420,6 +430,10 @@ public class AgentController : MonoBehaviour
     public void Update()
     {
         currentState.Tick();
+
+        if (currentTarget != null) {
+            distanceFromCurrentTarget = Vector3.Distance(currentTarget.transform.position, transform.position);
+        }
     }
 
     private void InitializeStates()
