@@ -351,6 +351,7 @@ public class AttackState : State
         soldier.weaponIK.isAiming = true;
         soldier.navMeshAgent.enabled = false;
         soldier.weaponIK.SetFiring(true);
+        // TODO - Implement shooting logic
     }
 
     override public void Tick()
