@@ -10,6 +10,11 @@
     <a href="https://dk.um.si/IzpisGradiva.php?id=84780&lang=slv">Bachelor's Thesis</a>
 </p>
 
+<br>
+<p align="center">
+    <img src="screenshots/thumbnail.png?raw=true" alt="FSM Example">
+</p>
+
 ## Table of Contents
 
 - [About](#about)
@@ -34,11 +39,6 @@
 <a name="about"></a>
 ## About
 For my bachelor's thesis, I developed intelligent opponents within a third-person shooter game. This was achieved by utilizing Finite State Machine (FSM) approach. The FSM approach allowed for the dynamic control of the opponents' behaviors, enabling them to adapt and respond intelligently to different in-game situations. In this document I will explain how to achieve intelligent behaviour with the help of FSM and Unity engine.
-
-<br>
-<p align="center">
-    <img src="screenshots/thumbnail.png?raw=true" alt="FSM Example">
-</p>
 
 <hr>
 
