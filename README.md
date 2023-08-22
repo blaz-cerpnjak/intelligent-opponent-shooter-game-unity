@@ -21,6 +21,7 @@
     - [Investigation State](#fsm-investigation-state)
     - [Attack State](#fsm-attack-state)
 - [Agent Controller](#agent-controller)
+- [Health](#health)
 - [Navigation and Movement](#navigation-and-movement)
     - [Generating NavMesh](#nav-mesh)
     - [NavMeshAgent](#nav-mesh-agent)
@@ -378,6 +379,41 @@ public class AttackState : State
         soldier.aimRig.weight = 0f;
         soldier.weaponIK.isAiming = false;
         soldier.navMeshAgent.enabled = true;
+    }
+}
+```
+
+<a name="health"></a>
+## Health and Death
+To control agent's health we implemented a Health script which is attached to agent's game object. In inspector just connect OnDeath event to a method in AgentController script.
+
+```csharp
+using UnityEngine;
+using UnityEngine.Events;
+
+public class Health : MonoBehaviour
+{
+    [SerializeField] private int startingHealth = 100;
+    public int currentHealth;
+
+    public UnityEvent OnDeath;
+    public UnityEvent<int> OnDamage;
+
+    private void Awake()
+    {
+        currentHealth = startingHealth;
+    }
+
+    public void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
+        OnDamage?.Invoke(currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            OnDeath?.Invoke();
+        }
     }
 }
 ```
