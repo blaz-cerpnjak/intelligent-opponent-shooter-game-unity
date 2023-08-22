@@ -17,6 +17,7 @@
     - [Base State](#fsm-base-state)
     - [Patrol State](#fsm-patrol-state)
     - [Chase Target State](#fsm-chase-state)
+    - [Investigation State](#fsm-investigation-state)
     - [Attack State](#fsm-attack-state)
 - [Agent Controller](#agent-controller)
 - [Navigation and Movement](#navigation-and-movement)
@@ -199,6 +200,33 @@ public class ChaseTargetState : State
     }
 
 }
+```
+
+<hr>
+
+<a name="fsm-investigation-state"></a>
+### Investigation State:
+If agent looses the target, he should try to find it. In investigation state the agent first goes to the last know target position. Then it moves between random generated points and looks for target. After certain time passes, agent returns to his previous position.
+
+```csharp
+public class InvestigationState : State
+{
+    public InvestigationState(AgentController agent) : base(agent) {}
+
+    override public void Enter()
+    {
+        // TODO
+    }
+
+    override public void Tick()
+    {
+        // TODO
+    }
+
+    override public void Exit()
+    {
+        // TODO
+    }
 ```
 
 <hr>
