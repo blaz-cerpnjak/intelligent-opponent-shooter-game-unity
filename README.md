@@ -107,7 +107,7 @@ public class PatrolState : State
     public override Tick() {
         if (agent.currentTarget != null)
         {
-            agent.ChangeState(agent.chaseTargetState);
+            agent.ChangeState(agent.alertState);
             return;
         }
 
